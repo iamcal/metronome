@@ -5,6 +5,8 @@
 #define IDR_MAIN                        101
 #define IDD_DIALOG1                     102
 #define IDC_EDIT1                       1000
+#define IDC_EDIT2                       1001
+#define IDC_EDIT3                       1002
 #define ID_EXIT                         40002
 #define ID_OPEN                         40003
 #define ID_SETTIME                      40003

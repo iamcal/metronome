@@ -8,7 +8,9 @@
 HWND hWndMain;
 boolean gIsRunning;
 UINT gTimerId;
-UINT gTimerPeriod = 500;
+UINT gTimerPeriod = 128;
+UINT gBeepPeriod  = 100;
+UINT gBeepPitch   = 200;
 
 void check_menu(boolean checked){
 	MENUITEMINFO menuinfo;
@@ -22,7 +24,7 @@ void check_menu(boolean checked){
 void start_timer(void){
 	gIsRunning = TRUE;
 	check_menu(TRUE);
-	gTimerId = SetTimer(hWndMain, 1, gTimerPeriod, NULL);
+	gTimerId = SetTimer(hWndMain, 1, 60000 / gTimerPeriod, NULL);
 }
 
 void stop_timer(void){
@@ -39,6 +41,10 @@ BOOL MainDialog_OnCommand(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl)
 		case IDOK:
 			GetDlgItemText(hWnd, IDC_EDIT1, buffer, 255);
 			gTimerPeriod = atol(buffer);
+			GetDlgItemText(hWnd, IDC_EDIT2, buffer, 255);
+			gBeepPeriod = atol(buffer);
+			GetDlgItemText(hWnd, IDC_EDIT3, buffer, 255);
+			gBeepPitch = atol(buffer);
 		case IDCANCEL:
 			EndDialog(hWnd, wCommand);
 			break;
@@ -57,6 +63,10 @@ BOOL MainDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 		case WM_INITDIALOG:
 			_ltoa(gTimerPeriod, buffer, 10);
 			SetDlgItemText(hWnd, IDC_EDIT1, buffer);
+			_ltoa(gBeepPeriod, buffer, 10);
+			SetDlgItemText(hWnd, IDC_EDIT2, buffer);
+			_ltoa(gBeepPitch, buffer, 10);
+			SetDlgItemText(hWnd, IDC_EDIT3, buffer);
 			return 0;
 
 		case WM_CLOSE:
@@ -129,7 +139,7 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			return 0;
 
 		case WM_TIMER:
-			Beep(200,100);
+			Beep(gBeepPitch, gBeepPeriod);
 			return 0;
 
 		case WM_CLOSE:
